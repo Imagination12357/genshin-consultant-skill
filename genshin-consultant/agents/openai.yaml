@@ -1,0 +1,4 @@
+interface:
+  display_name: "Genshin Consultant"
+  short_description: "Image-based Genshin builds, stat targets, visual cards, weapons, teams"
+  default_prompt: "Use $genshin-consultant to analyze my Genshin screenshots, target stats, weapon rankings, artifacts, mechanics, materials, local PNG visual cards, and 3 recommended teams with cited sources. Answer in Korean info-first Genshin veteran tone."

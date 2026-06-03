@@ -1,0 +1,98 @@
+<svg width="1200" height="720" viewBox="0 0 1200 720" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Genshin Consultant repository overview</title>
+  <desc id="desc">A visual map showing the Genshin Consultant Codex skill, reference rules, asset cache, rendering scripts, and final Korean consulting output.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="720" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#102032"/>
+      <stop offset="0.42" stop-color="#183B50"/>
+      <stop offset="1" stop-color="#F3B562"/>
+    </linearGradient>
+    <linearGradient id="panel" x1="90" y1="110" x2="1110" y2="650" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFFFF" stop-opacity="0.94"/>
+      <stop offset="1" stop-color="#FFF8EC" stop-opacity="0.92"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="150" y1="166" x2="400" y2="302" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#3BB6C8"/>
+      <stop offset="1" stop-color="#2A7BA0"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="760" y1="166" x2="1010" y2="302" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F9C969"/>
+      <stop offset="1" stop-color="#D98338"/>
+    </linearGradient>
+    <filter id="shadow" x="60" y="80" width="1080" height="590" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="18" stdDeviation="22" flood-color="#07111D" flood-opacity="0.28"/>
+    </filter>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="9" refY="6" orient="auto">
+      <path d="M2 2L10 6L2 10" stroke="#244154" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>
+
+  <rect width="1200" height="720" rx="36" fill="url(#bg)"/>
+  <path d="M0 560C180 500 270 620 430 570C640 505 740 420 930 475C1035 505 1110 535 1200 495V720H0V560Z" fill="#0D1726" fill-opacity="0.3"/>
+  <circle cx="111" cy="108" r="52" fill="#F9C969" fill-opacity="0.55"/>
+  <circle cx="1030" cy="126" r="74" fill="#AEE8F2" fill-opacity="0.2"/>
+
+  <g filter="url(#shadow)">
+    <rect x="90" y="92" width="1020" height="560" rx="30" fill="url(#panel)"/>
+  </g>
+
+  <text x="600" y="66" text-anchor="middle" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="34" font-weight="800" fill="#F8FAFC">Genshin Consultant</text>
+  <text x="600" y="118" text-anchor="middle" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="20" font-weight="700" fill="#1D3344">Screenshot-based Genshin build consulting skill for Codex</text>
+
+  <g>
+    <rect x="140" y="156" width="260" height="126" rx="22" fill="url(#accent)"/>
+    <text x="170" y="196" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="24" font-weight="800" fill="#FFFFFF">1. User Input</text>
+    <text x="170" y="229" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="17" font-weight="600" fill="#E8FBFF">Screenshots, roster, builds</text>
+    <text x="170" y="256" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="17" font-weight="600" fill="#E8FBFF">Weapons, artifacts, teams</text>
+  </g>
+
+  <g>
+    <rect x="460" y="156" width="260" height="126" rx="22" fill="#FFFFFF" stroke="#B9CDD8" stroke-width="2"/>
+    <text x="490" y="196" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="24" font-weight="800" fill="#20384A">2. Skill Core</text>
+    <text x="490" y="229" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="17" font-weight="600" fill="#557085">SKILL.md orchestration</text>
+    <text x="490" y="256" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="17" font-weight="600" fill="#557085">Korean consulting policy</text>
+  </g>
+
+  <g>
+    <rect x="780" y="156" width="260" height="126" rx="22" fill="url(#gold)"/>
+    <text x="810" y="196" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="24" font-weight="800" fill="#FFFFFF">3. Output</text>
+    <text x="810" y="229" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="17" font-weight="600" fill="#FFF7E7">Rich Korean answer</text>
+    <text x="810" y="256" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="17" font-weight="600" fill="#FFF7E7">Optional PNG reports</text>
+  </g>
+
+  <path d="M405 219H452" stroke="#244154" stroke-width="3" stroke-linecap="round" marker-end="url(#arrow)"/>
+  <path d="M725 219H772" stroke="#244154" stroke-width="3" stroke-linecap="round" marker-end="url(#arrow)"/>
+
+  <g>
+    <rect x="140" y="342" width="240" height="150" rx="20" fill="#F6FBFC" stroke="#C1D6DF" stroke-width="2"/>
+    <text x="166" y="378" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="21" font-weight="800" fill="#20384A">References</text>
+    <text x="166" y="411" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="16" font-weight="600" fill="#597286">Benchmarks</text>
+    <text x="166" y="436" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="16" font-weight="600" fill="#597286">Source policy</text>
+    <text x="166" y="461" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="16" font-weight="600" fill="#597286">Output templates</text>
+  </g>
+
+  <g>
+    <rect x="430" y="342" width="300" height="150" rx="20" fill="#F6FBFC" stroke="#C1D6DF" stroke-width="2"/>
+    <text x="456" y="378" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="21" font-weight="800" fill="#20384A">Scripts</text>
+    <text x="456" y="411" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="16" font-weight="600" fill="#597286">Extract, validate, localize</text>
+    <text x="456" y="436" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="16" font-weight="600" fill="#597286">Query image cache</text>
+    <text x="456" y="461" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="16" font-weight="600" fill="#597286">Render visual cards</text>
+  </g>
+
+  <g>
+    <rect x="780" y="342" width="260" height="150" rx="20" fill="#F6FBFC" stroke="#C1D6DF" stroke-width="2"/>
+    <text x="806" y="378" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="21" font-weight="800" fill="#20384A">Asset Cache</text>
+    <text x="806" y="411" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="16" font-weight="600" fill="#597286">Characters</text>
+    <text x="806" y="436" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="16" font-weight="600" fill="#597286">Weapons</text>
+    <text x="806" y="461" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="16" font-weight="600" fill="#597286">Artifacts</text>
+  </g>
+
+  <path d="M260 334V294" stroke="#244154" stroke-width="3" stroke-linecap="round" marker-end="url(#arrow)"/>
+  <path d="M580 334V294" stroke="#244154" stroke-width="3" stroke-linecap="round" marker-end="url(#arrow)"/>
+  <path d="M910 334V294" stroke="#244154" stroke-width="3" stroke-linecap="round" marker-end="url(#arrow)"/>
+
+  <g>
+    <rect x="214" y="552" width="772" height="58" rx="18" fill="#20384A"/>
+    <text x="600" y="588" text-anchor="middle" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="20" font-weight="800" fill="#FFFFFF">One repo for reliable Genshin advice, cited research, cached icons, and report images</text>
+  </g>
+</svg>

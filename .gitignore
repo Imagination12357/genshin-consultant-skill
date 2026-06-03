@@ -1,0 +1,24 @@
+# Local orchestration, generated reports, and runtime artifacts
+.omx/
+generated/
+genshin-consultant/generated/
+genshin-consultant/.vscode/
+
+# Rebuildable local image cache
+genshin-consultant/assets/genshin-assets/current/
+
+# Python/runtime artifacts
+__pycache__/
+*.py[cod]
+*.pyo
+*.log
+*.jsonl
+
+# Local examples and user screenshots
+/scripts/
+리포트/
+캐릭터/
+
+# Editor and OS files
+.DS_Store
+Thumbs.db
