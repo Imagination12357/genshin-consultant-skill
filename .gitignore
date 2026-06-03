@@ -4,15 +4,14 @@ generated/
 genshin-consultant/generated/
 genshin-consultant/.vscode/
 
-# Rebuildable local image cache
-genshin-consultant/assets/genshin-assets/current/
-
 # Python/runtime artifacts
 __pycache__/
 *.py[cod]
 *.pyo
 *.log
 *.jsonl
+genshin-consultant/assets/genshin-assets/current/thumbnails/
+genshin-consultant/assets/genshin-assets/current/safe-thumbnails/
 
 # Local examples and user screenshots
 /scripts/

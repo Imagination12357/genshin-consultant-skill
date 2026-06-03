@@ -267,11 +267,18 @@ def extension_from_url_or_mime(url: str, mime: str | None) -> str:
     return ".png"
 
 
-def download_asset(url: str, target: Path, refresh: bool = False) -> dict[str, Any]:
+def cache_local_path(target: Path, cache_root: Path) -> str:
+    try:
+        return target.relative_to(cache_root).as_posix()
+    except ValueError:
+        return target.as_posix()
+
+
+def download_asset(url: str, target: Path, cache_root: Path, refresh: bool = False) -> dict[str, Any]:
     if target.exists() and not refresh:
         raw = target.read_bytes()
         return {
-            "local_path": str(target).replace("\\", "/"),
+            "local_path": cache_local_path(target, cache_root),
             "bytes": len(raw),
             "sha1": hashlib.sha1(raw).hexdigest(),
             "downloaded": False,
@@ -285,7 +292,7 @@ def download_asset(url: str, target: Path, refresh: bool = False) -> dict[str, A
     target.parent.mkdir(parents=True, exist_ok=True)
     target.write_bytes(raw)
     return {
-        "local_path": str(target).replace("\\", "/"),
+        "local_path": cache_local_path(target, cache_root),
         "content_type": content_type or "not_visible",
         "bytes": len(raw),
         "sha1": hashlib.sha1(raw).hexdigest(),
@@ -300,6 +307,7 @@ def add_variant(
     file_title: str,
     imageinfo: dict[str, Any],
     target_dir: Path,
+    cache_root: Path,
     refresh: bool,
 ) -> None:
     url = str(imageinfo.get("url") or "")
@@ -308,7 +316,7 @@ def add_variant(
     mime = str(imageinfo.get("mime") or "")
     ext = extension_from_url_or_mime(url, mime)
     target = target_dir / f"{variant}{ext}"
-    info = download_asset(url, target, refresh=refresh)
+    info = download_asset(url, target, cache_root, refresh=refresh)
     entry.setdefault("variants", {})[variant] = {
         "variant": variant,
         "file_title": file_title,
@@ -361,10 +369,10 @@ def collect_characters(cache_root: Path, refresh: bool) -> tuple[list[dict[str, 
         target_dir = cache_root / "images" / "characters" / entry["slug"]
         page_image = imageinfo_from_pageimage(page)
         if page_image:
-            add_variant(entry=entry, variant="card", file_title=page_image[0], imageinfo=page_image[1], target_dir=target_dir, refresh=refresh)
+            add_variant(entry=entry, variant="card", file_title=page_image[0], imageinfo=page_image[1], target_dir=target_dir, cache_root=cache_root, refresh=refresh)
         icon_title = f"File:{title} Icon.png"
         if icon_title in icon_infos:
-            add_variant(entry=entry, variant="icon", file_title=icon_title, imageinfo=icon_infos[icon_title], target_dir=target_dir, refresh=refresh)
+            add_variant(entry=entry, variant="icon", file_title=icon_title, imageinfo=icon_infos[icon_title], target_dir=target_dir, cache_root=cache_root, refresh=refresh)
         if not entry["variants"]:
             errors.append({"kind": "character", "name": title, "error": "no image variants found"})
         else:
@@ -395,7 +403,7 @@ def collect_weapons(cache_root: Path, refresh: bool) -> tuple[list[dict[str, Any
         target_dir = cache_root / "images" / "weapons" / entry["slug"]
         page_image = imageinfo_from_pageimage(page)
         if page_image:
-            add_variant(entry=entry, variant="icon", file_title=page_image[0], imageinfo=page_image[1], target_dir=target_dir, refresh=refresh)
+            add_variant(entry=entry, variant="icon", file_title=page_image[0], imageinfo=page_image[1], target_dir=target_dir, cache_root=cache_root, refresh=refresh)
         if not entry["variants"]:
             errors.append({"kind": "weapon", "name": title, "error": "no image variants found"})
         else:
@@ -449,7 +457,7 @@ def collect_artifacts(cache_root: Path, refresh: bool) -> tuple[list[dict[str, A
             target_dir = cache_root / "images" / "artifacts" / entry["set_slug"] / entry["slug"]
             page_image = imageinfo_from_pageimage(piece_page)
             if page_image:
-                add_variant(entry=entry, variant="icon", file_title=page_image[0], imageinfo=page_image[1], target_dir=target_dir, refresh=refresh)
+                add_variant(entry=entry, variant="icon", file_title=page_image[0], imageinfo=page_image[1], target_dir=target_dir, cache_root=cache_root, refresh=refresh)
             if not entry["variants"]:
                 errors.append({"kind": "artifact", "set": set_title, "name": piece_title, "error": "no image variants found"})
             else:
@@ -477,6 +485,7 @@ def collect_artifacts(cache_root: Path, refresh: bool) -> tuple[list[dict[str, A
                 file_title=page_image[0],
                 imageinfo=page_image[1],
                 target_dir=cache_root / "images" / "artifact-sets" / entry["set_slug"],
+                cache_root=cache_root,
                 refresh=refresh,
             )
             assets.append(entry)

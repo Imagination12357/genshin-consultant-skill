@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import shutil
 import re
 import sys
 from pathlib import Path
@@ -14,6 +15,7 @@ from typing import Any
 SKILL_ROOT = Path(__file__).resolve().parents[1]
 SKILL_ASSET_ROOT = SKILL_ROOT / "assets" / "genshin-assets" / "current"
 DEFAULT_CACHE_ROOT = Path(os.environ.get("GENSHIN_ASSET_ROOT", str(SKILL_ASSET_ROOT)))
+CACHE_MARKER = "assets/genshin-assets/current/"
 
 
 def normalize(text: str) -> str:
@@ -39,6 +41,53 @@ def choose_variant(asset: dict[str, Any], preferred: str | None) -> dict[str, An
             return variants[key]
     first = next(iter(variants.values()))
     return first if isinstance(first, dict) else None
+
+
+def cache_relative_path(path_value: str | Path | None, cache_root: Path) -> Path | None:
+    """Return an asset path relative to the current cache root when possible.
+
+    Older cache indexes may contain absolute paths from the machine that built
+    the cache. Re-basing from the stable cache marker keeps the skill portable
+    when copied to a different Codex workspace or PC.
+    """
+    if not path_value:
+        return None
+    raw = str(path_value).replace("\\", "/")
+    lowered = raw.casefold()
+    marker_index = lowered.rfind(CACHE_MARKER)
+    if marker_index >= 0:
+        return Path(raw[marker_index + len(CACHE_MARKER) :])
+
+    path = Path(path_value)
+    try:
+        return path.resolve().relative_to(cache_root.resolve())
+    except (OSError, ValueError):
+        pass
+
+    if not path.is_absolute():
+        return path
+    return None
+
+
+def resolve_cache_path(path_value: str | Path | None, cache_root: Path) -> Path | None:
+    """Resolve cached image paths against the current skill cache location."""
+    if not path_value:
+        return None
+
+    rel = cache_relative_path(path_value, cache_root)
+    if rel is not None:
+        rebased = cache_root / rel
+        if rebased.exists() or not Path(path_value).is_absolute():
+            return rebased
+
+    direct = Path(path_value)
+    return direct if direct.exists() else None
+
+
+def render_path(path: Path | None) -> str | None:
+    if not path:
+        return None
+    return path.resolve().as_posix()
 
 
 def asset_matches(asset: dict[str, Any], kind: str | None, tag: str | None) -> bool:
@@ -82,8 +131,9 @@ def find_assets(index: dict[str, Any], query: str, kind: str | None, tag: str | 
     return sorted(results, key=sort_key)[:limit]
 
 
-def shape_result(asset: dict[str, Any], variant_name: str | None) -> dict[str, Any]:
+def shape_result(asset: dict[str, Any], variant_name: str | None, cache_root: Path) -> dict[str, Any]:
     variant = choose_variant(asset, variant_name) or {}
+    image_path = resolve_cache_path(variant.get("local_path"), cache_root)
     return {
         "id": asset.get("id"),
         "kind": asset.get("kind"),
@@ -91,7 +141,8 @@ def shape_result(asset: dict[str, Any], variant_name: str | None) -> dict[str, A
         "set_name": asset.get("set_name"),
         "tags": asset.get("tags", []),
         "variant": variant.get("variant"),
-        "image_path": variant.get("local_path"),
+        "image_path": render_path(image_path),
+        "cache_relative_path": str(cache_relative_path(image_path, cache_root)).replace("\\", "/") if image_path else None,
         "image_source_id": asset.get("id"),
         "source_page": asset.get("source_page"),
         "asset_url": variant.get("asset_url"),
@@ -107,16 +158,13 @@ def make_thumbnail(image_path: str | None, cache_root: Path, size: int | None) -
         print(f"WARN: Pillow unavailable for thumbnails: {exc}", file=sys.stderr)
         return image_path
 
-    src = Path(image_path)
-    if not src.exists():
+    src = resolve_cache_path(image_path, cache_root)
+    if not src or not src.exists():
         return image_path
-    try:
-        rel = src.relative_to(cache_root)
-    except ValueError:
-        rel = Path(src.name)
+    rel = cache_relative_path(src, cache_root) or Path(src.name)
     dst = cache_root / "thumbnails" / str(size) / rel
     if dst.exists() and dst.stat().st_mtime >= src.stat().st_mtime:
-        return dst.as_posix()
+        return render_path(dst)
 
     dst.parent.mkdir(parents=True, exist_ok=True)
     with Image.open(src) as image:
@@ -125,7 +173,7 @@ def make_thumbnail(image_path: str | None, cache_root: Path, size: int | None) -
         canvas = Image.new("RGBA", (size, size), (0, 0, 0, 0))
         canvas.alpha_composite(image, ((size - image.width) // 2, (size - image.height) // 2))
         canvas.save(dst)
-    return dst.as_posix()
+    return render_path(dst)
 
 
 def apply_thumbnails(rows: list[dict[str, Any]], cache_root: Path, size: int | None) -> list[dict[str, Any]]:
@@ -139,6 +187,30 @@ def apply_thumbnails(rows: list[dict[str, Any]], cache_root: Path, size: int | N
     return rows
 
 
+def apply_render_root(rows: list[dict[str, Any]], cache_root: Path, render_root: Path | None) -> list[dict[str, Any]]:
+    """Copy resolved images to a caller-provided render root and return those paths.
+
+    This is useful for Codex Desktop sessions where answers should avoid
+    user-profile paths but still need concrete absolute filesystem paths in
+    Markdown image tags. The render root is optional and never hardcoded, so the
+    skill remains portable across PCs.
+    """
+    if not render_root:
+        return rows
+    for row in rows:
+        src = resolve_cache_path(row.get("image_path"), cache_root)
+        if not src or not src.exists():
+            continue
+        rel = cache_relative_path(src, cache_root) or Path(src.name)
+        dst = render_root / rel
+        dst.parent.mkdir(parents=True, exist_ok=True)
+        if not dst.exists() or dst.stat().st_mtime < src.stat().st_mtime:
+            shutil.copy2(src, dst)
+        row["render_path"] = render_path(dst)
+        row["image_path"] = row["render_path"]
+    return rows
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Query Genshin image asset cache")
     parser.add_argument("queries", nargs="+", help="asset names, set names, or fuzzy text")
@@ -149,6 +221,12 @@ def main() -> int:
     parser.add_argument("--limit", type=int, default=5)
     parser.add_argument("--format", choices=["json", "paths", "manifest-items"], default="json")
     parser.add_argument("--thumb-size", type=int, help="create square thumbnail PNGs and return those paths")
+    parser.add_argument(
+        "--render-root",
+        type=Path,
+        default=Path(os.environ["GENSHIN_CODEX_RENDER_ROOT"]) if os.environ.get("GENSHIN_CODEX_RENDER_ROOT") else None,
+        help="copy returned images under this root and emit those paths for Markdown rendering",
+    )
     args = parser.parse_args()
 
     try:
@@ -156,8 +234,9 @@ def main() -> int:
         rows = []
         for query in args.queries:
             matches = find_assets(index, query, args.kind, args.tag, args.limit)
-            rows.extend(shape_result(asset, args.variant) for asset in matches)
+            rows.extend(shape_result(asset, args.variant, args.cache_root) for asset in matches)
         rows = apply_thumbnails(rows, args.cache_root, args.thumb_size)
+        rows = apply_render_root(rows, args.cache_root, args.render_root)
     except Exception as exc:  # noqa: BLE001
         print(f"ERROR: {exc}", file=sys.stderr)
         return 2

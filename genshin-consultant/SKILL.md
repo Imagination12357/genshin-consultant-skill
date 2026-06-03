@@ -14,9 +14,9 @@ Default mode is **rich text consulting**. For ordinary requests about builds, we
 3. Produce the Korean consultation answer with conclusion, compact recommendations, target stats, caveats, rotation or farming next steps, local inline asset previews, and citations.
 4. If the user did not explicitly ask for an image report, end with a short offer such as `리포트도 발행해드릴까요?`.
 
-Do **not** scan asset folders, build visual metadata, or render PNGs in default rich text mode. Use `scripts/query_asset_cache.py` for inline images instead of manual asset-folder browsing.
+Do **not** scan asset folders, build visual metadata, or render PNGs in default rich text mode. Use `scripts/query_asset_cache.py` for inline images instead of manual asset-folder browsing, except when debugging a rendering failure.
 
-Lightweight inline asset previews are required in rich text mode whenever the answer names specific characters, weapons, or artifact sets and the local cache has them. After the text recommendation is finalized, run `scripts/query_asset_cache.py` with `--thumb-size 48` for the mentioned main characters, final party members, top weapon recommendations, and top artifact recommendations that will appear in the answer. Use the returned thumbnail paths in Markdown image tags. Do not use this step as a reason to delay the consulting answer: cap lookups to about 10-12 visible items, skip cache misses, never call `fetch_card_assets.py`, and never generate PNG/JSON report artifacts unless report mode is triggered.
+Lightweight inline asset previews are required in rich text mode whenever the answer names specific characters, weapons, or artifact sets and the local cache has them. This is a fixed output requirement, not optional decoration. After the text recommendation is finalized, run `scripts/query_asset_cache.py` with `--thumb-size 48` for the mentioned main characters, final party members, top weapon recommendations, and top artifact recommendations that will appear in the answer. Use the returned thumbnail paths in Markdown image tags. Do not use this step as a reason to delay the consulting answer: cap lookups to about 10-12 visible items, skip cache misses, never call `fetch_card_assets.py`, and never generate PNG/JSON report artifacts unless report mode is triggered.
 
 Image report mode is opt-in. Trigger it only when the user explicitly asks for `리포트`, `report`, `이미지 리포트`, `카드`, `시각자료`, `PNG`, `한 장으로`, `그림으로`, `이미지로`, or `렌더링`. Ordinary words such as `추천`, `파티`, `성유물`, `무기`, `종결`, `준종결`, and `스펙` are rich text mode unless one of those report triggers is also present.
 
@@ -31,7 +31,7 @@ When report mode is triggered, first finish the text recommendation, then query 
 - Text consultations must not be terse, but must be responsive in the Codex desktop thread. Prefer compact sections: one-line conclusion, assumptions/uncertainty, target stats, artifact guidance, weapon guidance, party/rotation guidance, and next-step priorities. Do not create a standalone icon gallery unless the user explicitly asks for a gallery.
 - Do not let Markdown tables overflow the UI. Use prose tables only for short data with 2-3 columns and short cells. Do not put full rotations, long party explanations, citations, or many `code` chips inside table cells. For long party, weapon, artifact, and target-stat explanations, prefer numbered "card" blocks with short labeled lines (`편성:`, `핵심:`, `조건:`, `교체:`) instead of wide prose tables. Put citations after the block or section, not inside every table cell.
 - Image-only layout exceptions are allowed: a party lineup may use a 4-column horizontal icon table, and a five-piece artifact set may use a 5-column horizontal icon table, as long as cells contain only a small image plus a short label. Put explanations below those image rows.
-- In text consultations, use local asset icons for all main named recommendations when cache entries exist, but attach each image to the relevant text item: character icons in party rows, weapon icons beside each weapon name, and artifact icons in artifact set rows. Inline assets are Markdown thumbnail images, not HTML and not generated report cards.
+- In text consultations, use local asset icons for all main named recommendations when cache entries exist, but attach each image to the relevant text item: character icons in party rows, weapon icons beside each weapon name, and artifact icons in artifact set rows. Inline assets are Markdown thumbnail images, not HTML and not generated report cards. If the final answer contains a build, weapon list, artifact set, or party list and cached images exist, missing image tags are a formatting failure that must be fixed before responding.
 - For visual cards in report mode, query the local asset cache first. If the cache has a matching character, weapon, artifact, or artifact set image, use that `image_path` instead of web-fetching again. If the cache misses, use official/wiki-first image sourcing, download the images to local card assets, and paste them into the PNG card. Do not broad-scrape fanart or unsourced Google images.
 - Weapon and artifact recommendation requests are rich text by default: use tables and optional inline cached icons, not generated cards. In report mode, weapon recommendations should include a generated `weapon_top5_card`, and artifact recommendations should include a generated `artifact_showcase_card`. If safe images cannot be found, generate a placeholder card and mark image gaps clearly.
 - Weapon and artifact visuals must match the dark element-themed HUD used by the main build report. Do not leave recommendation cards as plain white grids. Artifact recommendation visuals should show main option and substat priority only, not fake rolled artifact substats.
@@ -58,7 +58,7 @@ Do not load report-generation references just because screenshots exist. Before 
 - Weapon image: render the weapon detail image if available; if the weapon is only mentioned in text, state that no weapon screenshot was provided.
 - Artifact images: render each artifact detail image separately when available. Arrange five artifact slots in one Markdown table row when possible; otherwise use a clearly labeled compact gallery.
 
-For local Markdown image tags, use a concrete absolute filesystem path. Prefer a privacy-safe absolute alias such as `/absolute/path/to/...` when it resolves to the same file; do not put `~` or `$env:USERPROFILE` inside image URLs because those usually do not render.
+For local Markdown image tags, use a concrete absolute filesystem path returned by `scripts/query_asset_cache.py`; never invent or hand-rewrite image paths. Prefer a privacy-safe render root when requested or when user-profile paths should not be shown: set `GENSHIN_CODEX_RENDER_ROOT` or pass `--render-root <absolute-render-cache>` to `query_asset_cache.py`, then use the returned `image_path`/path output. Do not put `~`, environment variables, relative paths, HTML `<img>`, or raw JSON-only paths inside image URLs because those usually do not render.
 
 Load `references/extraction-schema.md` when extracting. Produce a structured working object with:
 
@@ -101,25 +101,35 @@ Every source summary must include source type, URL, publication/update date if v
 
 Only in report mode, load `references/asset-cache.md` and run `scripts/query_asset_cache.py` for visual cards after the final recommendation list is known. Populate card metadata with cached local `image_path` values. If the cache misses, collect official/wiki-first image page URLs during web research. Then use `scripts/fetch_card_assets.py` to download direct `asset_url`s or discover `og:image`/`twitter:image` from the source page. Use placeholders only after cache lookup and official/wiki image discovery both fail.
 
-For rich text inline images, do not load report-generation references. Use `scripts/query_asset_cache.py` directly after the recommendation list is finalized. This is mandatory when the final answer names specific characters, weapons, or artifact sets and the local cache has matching assets:
+For rich text inline images, do not load report-generation references. Use `scripts/query_asset_cache.py` directly after the recommendation list is finalized. This is mandatory when the final answer names specific characters, weapons, or artifact sets and the local cache has matching assets. The script re-bases cached image paths against the current skill folder, so it remains portable when the skill is copied to another PC. Always use script output paths, not hardcoded machine paths.
 
 - Main and highlighted characters: `--kind character --variant icon --limit 1`; use `card` only when the answer benefits from a larger single-character preview.
 - Party members: `--kind character --variant icon --limit 1`.
 - Weapons: `--kind weapon --limit 1`.
 - Artifact sets: try `--kind artifact_set --limit 1` first. If no set icon exists, query the five piece icons with `--kind artifact --limit 5 --format manifest-items`.
 - Artifact pieces: use `--kind artifact --limit 5 --format manifest-items` when showing a five-piece row; otherwise use only the primary set/piece.
+- Do not mix characters, weapons, and artifacts in one lookup command. Query each kind separately so the correct `--kind`, `--variant`, and thumbnail paths are returned.
+- If a Markdown image renders as a blank box, re-run the relevant lookup with `--format paths --thumb-size 48` and verify the returned path exists. If privacy-safe visible paths are needed, re-run with `--render-root` and use the returned render-cache paths.
 
 For answers like "Chevreuse + Durin party/build", query and render both character icons, at least the top 2-4 visible weapon recommendations, and the top 1-2 visible artifact recommendations. Example lookup shape:
 
 ```powershell
 $env:PYTHONUTF8='1'
-python "/absolute/path/to/genshin_agent/genshin-consultant/scripts/query_asset_cache.py" Chevreuse Durin --kind character --variant icon --limit 1 --thumb-size 48
-python "/absolute/path/to/genshin_agent/genshin-consultant/scripts/query_asset_cache.py" "Favonius Lance" "Black Tassel" "Moonweaver's Dawn" --kind weapon --limit 1 --thumb-size 48
-python "/absolute/path/to/genshin_agent/genshin-consultant/scripts/query_asset_cache.py" "Noblesse Oblige" --kind artifact_set --limit 1 --thumb-size 48
-python "/absolute/path/to/genshin_agent/genshin-consultant/scripts/query_asset_cache.py" "A Day Carved From Rising Winds" --kind artifact --limit 5 --format manifest-items --thumb-size 48
+python "./genshin-consultant/scripts/query_asset_cache.py" Chevreuse Durin --kind character --variant icon --limit 1 --thumb-size 48
+python "./genshin-consultant/scripts/query_asset_cache.py" "Favonius Lance" "Black Tassel" "Moonweaver's Dawn" --kind weapon --limit 1 --thumb-size 48
+python "./genshin-consultant/scripts/query_asset_cache.py" "Noblesse Oblige" --kind artifact_set --limit 1 --thumb-size 48
+python "./genshin-consultant/scripts/query_asset_cache.py" "A Day Carved From Rising Winds" --kind artifact --limit 5 --format manifest-items --thumb-size 48
 ```
 
-Use concrete absolute paths in Markdown image tags, preferably returned `/absolute/path/to/.../thumbnails/48/...` paths. The Codex desktop does **not** render HTML `<img>` tags or HTML line breaks such as `<br>` reliably; it may print them as visible text. Do not use HTML image tags, HTML `<br>` tags, relative paths, `~`, `$env:USERPROFILE`, JSON-only paths, or plain text paths as the visible preview. If lookup fails, omit the image and continue with text; do not mention every missing icon unless the user asked about visuals.
+Use concrete absolute paths in Markdown image tags, preferably returned thumbnail paths. For privacy-safe rendering in Codex Desktop, optionally set a render root and use only returned render-cache paths:
+
+```powershell
+$env:GENSHIN_CODEX_RENDER_ROOT='C:\path\to\genshin-render-cache'
+$env:PYTHONUTF8='1'
+python "./genshin-consultant/scripts/query_asset_cache.py" Columbina --kind character --variant icon --limit 1 --thumb-size 48 --format paths
+```
+
+The Codex desktop does **not** render HTML `<img>` tags or HTML line breaks such as `<br>` reliably; it may print them as visible text. Do not use HTML image tags, HTML `<br>` tags, relative paths, `~`, `$env:USERPROFILE`, JSON-only paths, or plain text paths as the visible preview. If lookup fails, omit only that missing asset and continue with text; do not omit all images for the section unless every lookup failed.
 
 For cached icons in rich text mode, generate actual thumbnail PNGs with `--thumb-size 48`, then use Markdown image syntax:
 
