@@ -2,7 +2,7 @@
 
 <div align="center">
 
-![Genshin Consultant repository overview](docs/assets/repo-overview.svg)
+![Genshin Consultant repository overview](docs/assets/readme_main.png)
 
 **Codex용 원신 빌드 컨설팅 스킬**  
 Screenshot-based Genshin Impact consulting skill for Codex  
