@@ -128,7 +128,7 @@ Use Korean and English searches. Replace `{character}` with the actual character
 ### Build and stats
 
 - `원신 {character} 성유물 무기 특성 조합 최신`
-- `원신 {character} 공략 성유물 무기 특성 별자리`
+- `원신 {character} 공략 성유물 무기 특성 돌파`
 - `원신 {character} 치확 치피 원충 원마 스펙`
 - `Genshin {character} guide artifacts weapons talents teams KQM`
 - `Genshin {character} build guide version`

@@ -19,7 +19,7 @@ Use `info-first-flavor`: facts/tables/source claims stay precise, while one-line
 
 ## 1. 한줄 결론
 - 현재 상태를 한 문장으로 요약한다.
-- 예: `지금은 딜 부족보다 원충/사용법/성유물 주옵 정리가 먼저입니다.`
+- 예: `지금은 버프보다 원충/사이클/성유물 주옵 정리가 먼저입니다.`
 
 ## 2. 핵심 이미지 요약
 Use when local asset icons are available from the cache. This is still text mode, not report mode. If the answer names specific characters, weapons, or artifact sets and cache entries exist, this section is required.

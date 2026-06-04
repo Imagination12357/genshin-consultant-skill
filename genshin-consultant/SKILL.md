@@ -181,7 +181,7 @@ Use this layout policy for every Korean consultation shown in the Codex thread:
 편성: 슈브르즈 / 두린 / 피슬 / 번개 메인딜
 핵심: 순수 과부하 유지, 슈브르즈 내성깎 활성화
 조건: 불/번개만 편성, 과부하 후 슈브르즈 홀드 E
-교체: 피슬 -> 야에/북두/오로룬
+교체: 피슬 -> 야에/북두/올로룬
 ```
 
 ### 4. Optional report generation

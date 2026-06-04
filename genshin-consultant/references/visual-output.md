@@ -271,7 +271,7 @@ Examples of mechanics worth highlighting:
 
 - 스택을 소비하지 않아 피증/추가타가 비는 상황
 - 핏값/Bond of Life 회수 전 평타만 치는 상황
-- 원충 부족으로 폭발 사이클이 끊기는 상황
+- 원충 부족으로 원소폭발 사이클이 끊기는 상황
 - 증발/융해/격화/만개 트리거 소유자가 바뀌는 상황
 
 ## Image source policy
