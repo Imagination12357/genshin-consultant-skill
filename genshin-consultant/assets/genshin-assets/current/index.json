@@ -14497,10 +14497,17 @@
           "width": 480,
           "height": 270,
           "local_path": "images/artifact-sets/archaic-petra/icon.webp",
-          "bytes": 3690336,
-          "sha1": "e17cfff19bfc8bbe8b25963f134aee4226395f41",
+          "bytes": 1371214,
+          "sha1": "24394674a8afb6051fb3cf362f0027865604b1d9",
           "downloaded": false,
-          "frames": 157
+          "frames": 79,
+          "optimization": {
+            "type": "artifact_set_frame_step",
+            "frame_step": 2,
+            "source_frames": 157,
+            "source_width": 480,
+            "source_height": 270
+          }
         }
       }
     },
@@ -17998,10 +18005,17 @@
           "width": 480,
           "height": 270,
           "local_path": "images/artifact-sets/gambler/icon.webp",
-          "bytes": 3417752,
-          "sha1": "5e16cd2cab3a03810509104b043c36a30fd83a00",
+          "bytes": 1279310,
+          "sha1": "c08909973cb59791eec60c951e116250a04ce722",
           "downloaded": false,
-          "frames": 98
+          "frames": 49,
+          "optimization": {
+            "type": "artifact_set_frame_step",
+            "frame_step": 2,
+            "source_frames": 98,
+            "source_width": 480,
+            "source_height": 270
+          }
         }
       }
     },
@@ -18851,10 +18865,17 @@
           "width": 480,
           "height": 270,
           "local_path": "images/artifact-sets/heart-of-depth/icon.webp",
-          "bytes": 3371162,
-          "sha1": "e6c3f45b73be80f6153b677a6e614cf4c73d76b2",
+          "bytes": 1426904,
+          "sha1": "8813df5eee2ba8ee24ba52d401afad6866b18f7a",
           "downloaded": false,
-          "frames": 163
+          "frames": 82,
+          "optimization": {
+            "type": "artifact_set_frame_step",
+            "frame_step": 2,
+            "source_frames": 163,
+            "source_width": 480,
+            "source_height": 270
+          }
         }
       }
     },
@@ -19103,10 +19124,17 @@
           "width": 480,
           "height": 270,
           "local_path": "images/artifact-sets/husk-of-opulent-dreams/icon.webp",
-          "bytes": 1179212,
-          "sha1": "bfd6c2454b1f2a94aa3ba324d338742f3b2e6833",
+          "bytes": 493564,
+          "sha1": "44ad3d16f2696de178d37ca15ce8c94c111fc3ed",
           "downloaded": false,
-          "frames": 55
+          "frames": 28,
+          "optimization": {
+            "type": "artifact_set_frame_step",
+            "frame_step": 2,
+            "source_frames": 55,
+            "source_width": 480,
+            "source_height": 270
+          }
         }
       }
     },
@@ -19430,14 +19458,21 @@
           "file_title": "File:Artifact_Instructor_Passive.gif",
           "asset_url": "https://static.wikia.nocookie.net/gensin-impact/images/a/ae/Artifact_Instructor_Passive.gif/revision/latest?cb=20211025065320",
           "source_url": "https://genshin-impact.fandom.com/wiki/File:Artifact_Instructor_Passive.gif",
-          "mime": "image/gif",
+          "mime": "image/webp",
           "width": 480,
           "height": 270,
-          "local_path": "images/artifact-sets/instructor/icon.gif",
-          "bytes": 10329098,
-          "sha1": "9c4e04cc3fdc5bf0e65279a901ffc6a83d651391",
+          "local_path": "images/artifact-sets/instructor/icon.webp",
+          "bytes": 1897030,
+          "sha1": "3e7070046b66c1af74c6eea16dc904fe83ddec11",
           "downloaded": false,
-          "frames": 201
+          "frames": 101,
+          "optimization": {
+            "type": "artifact_set_frame_step",
+            "frame_step": 2,
+            "source_frames": 201,
+            "source_width": 480,
+            "source_height": 270
+          }
         }
       }
     },
@@ -19869,10 +19904,17 @@
           "width": 800,
           "height": 603,
           "local_path": "images/artifact-sets/long-nights-oath/icon.webp",
-          "bytes": 13669286,
-          "sha1": "ce87af49322c15783af42ad1d6d509dca8aa3571",
+          "bytes": 7172588,
+          "sha1": "499967fa7eca97fa2fec6b853c609eecf7ef7125",
           "downloaded": false,
-          "frames": 136
+          "frames": 68,
+          "optimization": {
+            "type": "artifact_set_frame_step",
+            "frame_step": 2,
+            "source_frames": 136,
+            "source_width": 800,
+            "source_height": 603
+          }
         }
       }
     },
@@ -21320,10 +21362,17 @@
           "width": 480,
           "height": 270,
           "local_path": "images/artifact-sets/noblesse-oblige/icon.webp",
-          "bytes": 5556448,
-          "sha1": "c0e2708d04035bffca632e5e7bd4111ac9091932",
+          "bytes": 2091492,
+          "sha1": "24270c480b57c0ab9f8ecfa18b1fd18756afbedf",
           "downloaded": false,
-          "frames": 146
+          "frames": 73,
+          "optimization": {
+            "type": "artifact_set_frame_step",
+            "frame_step": 2,
+            "source_frames": 146,
+            "source_width": 480,
+            "source_height": 270
+          }
         }
       }
     },
@@ -21970,10 +22019,17 @@
           "width": 480,
           "height": 270,
           "local_path": "images/artifact-sets/ocean-hued-clam/icon.webp",
-          "bytes": 1948432,
-          "sha1": "bcde320bfb96c255f09adf11b2b2976565b2f8c4",
+          "bytes": 748600,
+          "sha1": "7aa0940e0f7b5276c57c1284362339551a526536",
           "downloaded": false,
-          "frames": 116
+          "frames": 58,
+          "optimization": {
+            "type": "artifact_set_frame_step",
+            "frame_step": 2,
+            "source_frames": 116,
+            "source_width": 480,
+            "source_height": 270
+          }
         }
       }
     },
@@ -22781,10 +22837,17 @@
           "width": 480,
           "height": 270,
           "local_path": "images/artifact-sets/retracing-bolide/icon.webp",
-          "bytes": 1700762,
-          "sha1": "e40ee0a51424bb027b378282a25977c98e66f580",
+          "bytes": 763988,
+          "sha1": "dffbd21ce51ada036bc3ac2d0ac002cc42fad2a5",
           "downloaded": false,
-          "frames": 102
+          "frames": 51,
+          "optimization": {
+            "type": "artifact_set_frame_step",
+            "frame_step": 2,
+            "source_frames": 102,
+            "source_width": 480,
+            "source_height": 270
+          }
         }
       }
     },
@@ -24088,10 +24151,17 @@
           "width": 480,
           "height": 270,
           "local_path": "images/artifact-sets/tenacity-of-the-millelith/icon.webp",
-          "bytes": 2155290,
-          "sha1": "f32e7fa5e6487302c2ec974d5357801cafdb7418",
+          "bytes": 875052,
+          "sha1": "5d51fbe3c390edc6a865e83cba062e0e491e7e29",
           "downloaded": false,
-          "frames": 134
+          "frames": 67,
+          "optimization": {
+            "type": "artifact_set_frame_step",
+            "frame_step": 2,
+            "source_frames": 134,
+            "source_width": 480,
+            "source_height": 270
+          }
         }
       }
     },
@@ -24338,10 +24408,17 @@
           "width": 480,
           "height": 270,
           "local_path": "images/artifact-sets/the-exile/icon.webp",
-          "bytes": 3382154,
-          "sha1": "fab17e827dcf0ad401e0e908e76aec76b607c14f",
+          "bytes": 1423592,
+          "sha1": "0d21bd8f04318917b66af2507b290c98b6145e46",
           "downloaded": false,
-          "frames": 174
+          "frames": 87,
+          "optimization": {
+            "type": "artifact_set_frame_step",
+            "frame_step": 2,
+            "source_frames": 174,
+            "source_width": 480,
+            "source_height": 270
+          }
         }
       }
     },
@@ -25587,10 +25664,17 @@
           "width": 480,
           "height": 270,
           "local_path": "images/artifact-sets/vermillion-hereafter/icon.webp",
-          "bytes": 2994988,
-          "sha1": "f8ccc4f6ee8f4d96221baef7425f906d1210c33c",
+          "bytes": 1215192,
+          "sha1": "b9d0e24eeaa7c9a90c54e372af32647ccde5aab8",
           "downloaded": false,
-          "frames": 160
+          "frames": 80,
+          "optimization": {
+            "type": "artifact_set_frame_step",
+            "frame_step": 2,
+            "source_frames": 160,
+            "source_width": 480,
+            "source_height": 270
+          }
         }
       }
     },
