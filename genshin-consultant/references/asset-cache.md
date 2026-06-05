@@ -14,6 +14,7 @@ Use this reference when generating visual cards or when adding lightweight inlin
   - `weapon`: icon variants.
   - `artifact`: individual artifact piece icons.
   - `artifact_set`: representative set icons when page images exist.
+- Optimized storage may use WebP for large character card art and artifact-set previews. Artifact-set previews preserve animation timing and frame content unless a toolchain with reliable per-frame duration support is used. `query_asset_cache.py --thumb-size` emits PNG thumbnails for Codex Markdown display compatibility.
 - Korean aliases are extracted from wiki `ko` / `1_ko` fields when visible, so common Korean queries such as `유라`, `라이덴`, `예초`, `창백`, and `절연` should resolve without manual relabeling.
 
 ## Required lookup workflow
@@ -81,6 +82,7 @@ python "$env:USERPROFILE\.codex\skills\genshin-consultant\scripts\build_asset_ca
 ```
 
 Use `--refresh` only when existing files are stale or corrupted.
+After a full rebuild, run `scripts/optimize_asset_cache.py --apply` to shrink large character card art and static artifact-set previews before committing the cache.
 
 ## Output contract
 
@@ -92,7 +94,7 @@ Every cached match returns fields suitable for card metadata:
   "kind": "character",
   "name": "Nicole",
   "variant": "card",
-  "image_path": "/absolute/path/to/genshin_agent/genshin-consultant/assets/genshin-assets/current/images/characters/nicole/card.png",
+  "image_path": "/absolute/path/to/genshin_agent/genshin-consultant/assets/genshin-assets/current/images/characters/nicole/card.webp",
   "image_source_id": "character:nicole",
   "source_page": "https://genshin-impact.fandom.com/wiki/Nicole",
   "asset_url": "https://static.wikia.nocookie.net/..."
