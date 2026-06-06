@@ -334,16 +334,49 @@ def optimize_variant(
     if not isinstance(local_path, str):
         return None
     source = cache_root / local_path
+    target = source.with_suffix(".webp")
+    if mode == "static_webp" and not source.exists() and target.exists():
+        if apply:
+            update_variant(variant, target, cache_root)
+        with Image.open(target) as target_image:
+            return {
+                "source": local_path,
+                "target": cache_local_path(target, cache_root),
+                "before": None,
+                "after": target.stat().st_size if apply else None,
+                "width": target_image.width,
+                "height": target_image.height,
+                "frames": int(getattr(target_image, "n_frames", 1)),
+                "mode": mode,
+                "optimized": "resumed existing WebP target",
+            }
     if not source.exists():
         return {"source": local_path, "error": "missing source"}
     if source.suffix.casefold() == ".webp" and mode != "artifact_set":
         return {"source": local_path, "skipped": "already webp"}
 
-    target = source.with_suffix(".webp")
     before = source.stat().st_size
     if mode == "character_card":
         image = first_frame(source)
         output = resize_half(image)
+    elif mode == "static_webp":
+        with Image.open(source) as source_image:
+            source_width = source_image.width
+            source_height = source_image.height
+            frame_count = int(getattr(source_image, "n_frames", 1))
+        if source.suffix.casefold() == ".webp":
+            return {"source": local_path, "skipped": "already webp"}
+        if frame_count > 1:
+            return {
+                "source": local_path,
+                "before": before,
+                "width": source_width,
+                "height": source_height,
+                "frames": frame_count,
+                "mode": mode,
+                "skipped": "animated source is not handled by static webp mode",
+            }
+        output = first_frame(source)
     elif mode == "artifact_set":
         with Image.open(source) as source_image:
             source_format = source_image.format
@@ -513,6 +546,30 @@ def optimize(index: dict[str, Any], cache_root: Path, args: argparse.Namespace) 
             )
             if result:
                 results.append(result)
+        if args.include_weapons and asset.get("kind") == "weapon" and isinstance(variants.get("icon"), dict):
+            result = optimize_variant(
+                variant=variants["icon"],
+                cache_root=cache_root,
+                mode="static_webp",
+                quality=args.quality,
+                artifact_frame_step=args.artifact_frame_step,
+                animated_webp_method=args.animated_webp_method,
+                apply=args.apply,
+            )
+            if result:
+                results.append(result)
+        if args.include_artifacts and asset.get("kind") == "artifact" and isinstance(variants.get("icon"), dict):
+            result = optimize_variant(
+                variant=variants["icon"],
+                cache_root=cache_root,
+                mode="static_webp",
+                quality=args.quality,
+                artifact_frame_step=args.artifact_frame_step,
+                animated_webp_method=args.animated_webp_method,
+                apply=args.apply,
+            )
+            if result:
+                results.append(result)
     return results
 
 
@@ -534,6 +591,8 @@ def main() -> int:
     parser.add_argument("--quality", type=int, default=82)
     parser.add_argument("--artifact-frame-step", type=int, default=1, help="experimental: keep every Nth artifact-set animation frame")
     parser.add_argument("--animated-webp-method", type=int, default=0, help="libwebp method for animated WebP encoding, 0 is fastest")
+    parser.add_argument("--include-weapons", action="store_true", help="convert static weapon icons to WebP without resizing")
+    parser.add_argument("--include-artifacts", action="store_true", help="convert static artifact icons to WebP without resizing")
     parser.add_argument("--apply", action="store_true", help="write optimized files and update index.json")
     parser.add_argument("--details", action="store_true", help="print per-file results")
     args = parser.parse_args()
