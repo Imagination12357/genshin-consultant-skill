@@ -14,6 +14,9 @@ Use this reference when generating visual cards or when adding lightweight inlin
   - `weapon`: icon variants.
   - `artifact`: individual artifact piece icons.
   - `artifact_set`: representative set icons when page images exist.
+- Optimized storage uses WebP for most source images: character card art, weapon icons, artifact piece icons, and artifact-set previews. A few tiny PNG sources may remain PNG when WebP is larger.
+- Artifact-set previews may be animated WebP. Frame reduction preserves total animation duration and canvas dimensions.
+- Generated thumbnail files under `thumbnails/` intentionally remain PNG. `query_asset_cache.py --thumb-size` emits those PNG thumbnails for compact Markdown tables, rich text answers, and report metadata.
 - Korean aliases are extracted from wiki `ko` / `1_ko` fields when visible, so common Korean queries such as `유라`, `라이덴`, `예초`, `창백`, and `절연` should resolve without manual relabeling.
 
 ## Required lookup workflow
@@ -81,6 +84,7 @@ python "$env:USERPROFILE\.codex\skills\genshin-consultant\scripts\build_asset_ca
 ```
 
 Use `--refresh` only when existing files are stale or corrupted.
+After a full rebuild, run `scripts/optimize_asset_cache.py --include-weapons --include-artifacts --artifact-frame-step 2 --apply` to restore the optimized WebP layout before committing the cache.
 
 ## Output contract
 
@@ -92,7 +96,7 @@ Every cached match returns fields suitable for card metadata:
   "kind": "character",
   "name": "Nicole",
   "variant": "card",
-  "image_path": "/absolute/path/to/genshin_agent/genshin-consultant/assets/genshin-assets/current/images/characters/nicole/card.png",
+  "image_path": "/absolute/path/to/genshin_agent/genshin-consultant/assets/genshin-assets/current/images/characters/nicole/card.webp",
   "image_source_id": "character:nicole",
   "source_page": "https://genshin-impact.fandom.com/wiki/Nicole",
   "asset_url": "https://static.wikia.nocookie.net/..."

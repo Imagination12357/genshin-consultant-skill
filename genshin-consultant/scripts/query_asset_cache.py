@@ -162,6 +162,7 @@ def make_thumbnail(image_path: str | None, cache_root: Path, size: int | None) -
     if not src or not src.exists():
         return image_path
     rel = cache_relative_path(src, cache_root) or Path(src.name)
+    rel = rel.with_suffix(".png")
     dst = cache_root / "thumbnails" / str(size) / rel
     if dst.exists() and dst.stat().st_mtime >= src.stat().st_mtime:
         return render_path(dst)

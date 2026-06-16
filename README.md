@@ -39,7 +39,7 @@ genshin-consultant/
   agents/openai.yaml       # 스킬 표시 이름과 기본 프롬프트
   references/              # 빌드 기준, 출처 정책, 출력 템플릿
   scripts/                 # 캐시 조회, 검증, 리포트 렌더링 도구
-  assets/genshin-assets/   # 선택 사항: 로컬 이미지 캐시
+  assets/genshin-assets/   # 선택 사항: WebP 중심 로컬 이미지 캐시
 ```
 
 ### 설치
@@ -88,12 +88,19 @@ $genshin-consultant 이 라이덴 빌드를 이미지 리포트 PNG로 만들어
 5. 일반 상담은 텍스트와 작은 아이콘으로 답변합니다.
 6. 리포트 요청 시 `scripts/` 렌더러로 PNG 카드를 생성합니다.
 
+### 에셋 캐시 형식
+
+번들된 에셋 캐시는 repo 용량 효율을 위해 대부분의 원본 이미지를 WebP로 저장합니다. 캐릭터 카드, 무기 아이콘, 성유물 조각 아이콘, 성유물 세트 미리보기는 변환 후 더 커지는 일부 PNG 예외를 제외하고 WebP를 사용합니다. 성유물 세트 미리보기는 animated WebP일 수 있으며, 프레임을 줄이더라도 전체 재생 시간과 캔버스 크기는 보존합니다.
+
+`assets/genshin-assets/current/thumbnails/` 아래의 생성된 썸네일은 의도적으로 PNG를 유지합니다. `query_asset_cache.py --thumb-size`는 Markdown 표, 일반 텍스트 상담, 리포트 메타데이터에서 안정적으로 쓰기 위한 작은 PNG 썸네일을 생성합니다.
+
 ### 스크립트 사용법
 
 | Script | Purpose | Example |
 |---|---|---|
 | `build_asset_cache.py` | 캐릭터/무기/성유물 이미지 캐시 생성 | `python genshin-consultant/scripts/build_asset_cache.py --summary-only` |
 | `query_asset_cache.py` | 캐시에서 이미지 경로 검색 | `python genshin-consultant/scripts/query_asset_cache.py "Raiden Shogun" --kind character --variant icon --thumb-size 48` |
+| `optimize_asset_cache.py` | 캐시 이미지를 크기 효율적인 WebP로 변환하고 의도한 크기와 애니메이션 시간을 보존 | `python genshin-consultant/scripts/optimize_asset_cache.py --include-weapons --include-artifacts --artifact-frame-step 2 --apply` |
 | `validate_consultation.py` | 상담 JSON 결과 검증 | `python genshin-consultant/scripts/validate_consultation.py result.json` |
 | `localize_card_metadata.py` | 카드 메타데이터의 이름을 한국어로 변환 | `python genshin-consultant/scripts/localize_card_metadata.py card.json --in-place` |
 | `fetch_card_assets.py` | 공식/wiki 이미지 에셋을 카드용으로 다운로드 | `python genshin-consultant/scripts/fetch_card_assets.py manifest.json` |
@@ -151,7 +158,7 @@ genshin-consultant/
   agents/openai.yaml       # Display name and default prompt
   references/              # Benchmarks, source policy, output templates
   scripts/                 # Cache lookup, validation, localization, renderers
-  assets/genshin-assets/   # Optional local image cache
+  assets/genshin-assets/   # Optional local image cache, mostly WebP originals
 ```
 
 ### Installation
@@ -199,12 +206,19 @@ $genshin-consultant Generate a PNG build report for this Raiden Shogun build.
 5. Rich text answers include compact recommendations and optional cached icons.
 6. Report mode uses `scripts/` to localize metadata and render PNG cards.
 
+### Asset Cache Format
+
+The bundled asset cache stores most source images as WebP for repository size efficiency. Character card art, weapon icons, artifact piece icons, and artifact-set previews are WebP unless a specific PNG source is smaller after comparison. Artifact-set previews may be animated WebP; their timing is preserved while redundant frames are reduced.
+
+Generated thumbnails under `assets/genshin-assets/current/thumbnails/` intentionally remain PNG. `query_asset_cache.py --thumb-size` creates those PNG thumbnails as a stable small-image fallback for Markdown tables, rich text answers, and report metadata.
+
 ### Script Guide
 
 | Script | Purpose | Example |
 |---|---|---|
 | `build_asset_cache.py` | Build the character, weapon, and artifact image cache | `python genshin-consultant/scripts/build_asset_cache.py --summary-only` |
 | `query_asset_cache.py` | Find cached image paths | `python genshin-consultant/scripts/query_asset_cache.py "Raiden Shogun" --kind character --variant icon --thumb-size 48` |
+| `optimize_asset_cache.py` | Convert cache images to size-efficient WebP while preserving intended dimensions and animation timing | `python genshin-consultant/scripts/optimize_asset_cache.py --include-weapons --include-artifacts --artifact-frame-step 2 --apply` |
 | `validate_consultation.py` | Validate consultation JSON | `python genshin-consultant/scripts/validate_consultation.py result.json` |
 | `localize_card_metadata.py` | Convert card metadata names into Korean display names | `python genshin-consultant/scripts/localize_card_metadata.py card.json --in-place` |
 | `fetch_card_assets.py` | Fetch official/wiki assets for visual cards | `python genshin-consultant/scripts/fetch_card_assets.py manifest.json` |
