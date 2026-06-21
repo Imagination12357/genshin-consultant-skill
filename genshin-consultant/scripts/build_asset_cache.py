@@ -39,7 +39,7 @@ SKIP_WEAPON_TITLES = {
     "Weapon Series",
 }
 
-IMAGE_EXTENSIONS = {".png", ".jpg", ".jpeg", ".webp"}
+IMAGE_EXTENSIONS = {".gif", ".png", ".jpg", ".jpeg", ".webp"}
 
 
 def now_iso() -> str:
